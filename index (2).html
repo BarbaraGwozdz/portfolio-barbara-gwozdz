@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="pl" data-lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barbara Gwóźdź — HR & People Analytics</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* =========================================================
+   BAZA I KOLORY (Z perfekcyjnym Dark Mode)
+   ========================================================= */
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg: #F2EAE0;
+  --bg2: #E9E1D7;
+  --bg3: #FDFAF5;
+  --dark: #18120F;
+  --bx: #7B2C3C;
+  --bxh: #9C3E50;
+  --bxp: #F0DDE2;
+  --t: #1A1410;
+  --tm: #7A6A5E;
+  --br: #C5BAB0;
+  --ff: 'Syne', sans-serif;
+  --fb: 'DM Sans', sans-serif;
+}
+
+[data-dark]{
+  --bg: #18120F;    
+  --bg2: #1A1410;   
+  --bg3: #18120F;
+  --dark: #F2EAE0;  
+  --bx: #9C3E50;    
+  --bxh: #7B2C3C;
+  --bxp: rgba(156, 62, 80, 0.15); 
+  --t: #FDFAF5;     
+  --tm: #C5BAB0;    
+  --br: #7A6A5E;    
+}
+
+html{scroll-behavior:smooth;}
+body{font-family:var(--fb);background:var(--bg);color:var(--t);font-size:16px;overflow-x:hidden;transition:background .3s,color .3s;}
+a{color:inherit;text-decoration:none;}
+
+/* =========================================================
+   PROGRESS BAR
+   ========================================================= */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 4px; background: var(--bx);
+  width: 0%; z-index: 10000; transition: width 0.1s ease-out;
+}
+
+/* =========================================================
+   NAWIGACJA
+   ========================================================= */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(242,234,224,.95); backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--br); height:60px; padding:0 52px;
+  display:flex; justify-content:space-between; align-items:center;
+  transition:background .3s,border-color .3s;
+}
+[data-dark] nav{background:rgba(24,18,15,.95);}
+.nav-l{display:flex;align-items:center;gap:32px;}
+.nav-logo{font-family:var(--ff);font-weight:800;font-size:14px;letter-spacing:.08em;color:var(--bx);}
+.nav-links{display:flex;gap:26px;}
+.nav-links a{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--tm);transition:color .2s;}
+.nav-links a:hover{color:var(--bx);}
+.nav-r{display:flex;align-items:center;gap:12px;}
+.nav-btn{
+  font-size:11px;font-weight:600;letter-spacing:.06em;
+  padding:7px 16px;border-radius:100px;transition:all .2s;border:none; cursor:pointer;
+  font-family:var(--fb); display:inline-flex; align-items:center; justify-content:center;
+}
+.btn-dl{background:var(--bx);color:var(--bg3);}
+.btn-dl:hover{background:var(--bxh); transform:translateY(-2px);}
+.btn-lang{background:transparent;color:var(--tm);border:1px solid var(--br);}
+.btn-lang:hover{color:var(--bx);border-color:var(--bx);}
+.btn-dark{
+  width:36px;height:36px;border-radius:50%; background:transparent; cursor:pointer;
+  border:1px solid var(--br); color:var(--tm);
+  display:flex;align-items:center;justify-content:center; font-size:15px;transition:all .2s;
+}
+.btn-dark:hover{border-color:var(--bx);color:var(--bx);}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+#hero{
+  min-height:91vh;padding:0 52px; display:grid;grid-template-columns:1fr auto;
+  align-items:center;gap:48px; border-bottom:1px solid var(--br); position:relative;overflow:hidden;
+}
+.hero-l{padding:72px 0; z-index:2;}
+.h-eye{
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase; color:var(--bx);
+  margin-bottom:24px; display:flex;align-items:center;gap:14px; animation:fadeUp .7s .1s both;
+}
+.h-eye::after{content:'';width:40px;height:1px;background:var(--bx);}
+.h-name{
+  font-family:var(--ff);font-weight:800; font-size:clamp(32px,6vw,86px);line-height:.9;
+  letter-spacing:-.03em;margin-bottom:40px; animation:fadeUp .7s .2s both;
+}
+.h-name .ax{color:var(--bx);}
+.h-body{animation:fadeUp .7s .32s both;}
+.h-desc{
+  font-size:16px;line-height:1.85;color:var(--tm); border-left:2.5px solid var(--bx);
+  padding-left:20px; max-width:420px;margin-bottom:28px;
+}
+.h-kw{transition:color .2s;position:relative;display:inline-block; font-weight:700; cursor:default;}
+.h-kw:hover{color:var(--bx);}
+.kw-tip{
+  position:absolute;top:-28px;left:50%;transform:translateX(-50%); font-size:20px;
+  pointer-events:none; opacity:0;transition:opacity .2s,transform .2s; white-space:nowrap;
+}
+.h-kw:hover .kw-tip{opacity:1;transform:translateX(-50%) translateY(-4px);}
+
+.h-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:32px;}
+.h-cta{
+  background:var(--bx);color:var(--bg3); font-size:13px;font-weight:600;font-family:var(--fb);
+  padding:12px 24px;border-radius:100px;border:none; display:flex;align-items:center;gap:8px;
+  transition:background .2s,transform .2s, box-shadow .2s; cursor:pointer;
+}
+.h-cta:hover{background:var(--bxh);transform:translateY(-2px); box-shadow:0 4px 12px var(--bxp);}
+.h-cta-ghost{
+  background:transparent;color:var(--t); font-size:13px;font-weight:500;font-family:var(--fb);
+  padding:12px 20px;border-radius:100px; border:1px solid var(--br); transition:border-color .2s,color .2s;
+  cursor:pointer;
+}
+.h-cta-ghost:hover{border-color:var(--bx);color:var(--bx);}
+.h-pills{display:flex;flex-wrap:wrap;gap:7px;}
+.pill{
+  background:var(--bxp);color:var(--bx); font-size:11px;font-weight:500;letter-spacing:.04em;
+  padding:6px 14px;border-radius:100px; border:1px solid transparent;white-space:nowrap; transition:background .3s;
+}
+
+/* Photo */
+.hero-r{
+  display:flex;align-items:center; justify-content:flex-end;
+  height:100%;padding-bottom:0;position:relative;z-index:2;
+}
+.photo-wrap{
+  width:260px;height:350px; border-radius:130px 130px 0 0; background:var(--bg2);
+  display:flex;align-items:center;justify-content:center; overflow:hidden;
+  border:3px solid var(--bxp); position:relative;flex-shrink:0; transition:border-color .3s;
+}
+.photo-wrap img{width:100%;height:100%;object-fit:cover;object-position:center 15%; transition:transform 0.5s ease;}
+.photo-wrap:hover img {transform: scale(1.05);}
+.photo-placeholder-text{
+  font-family:var(--ff);color:var(--tm);font-weight:700;font-size:14px;text-align:center;
+  padding:20px;border:2px dashed var(--br);border-radius:100px;
+}
+
+/* Particles canvas */
+#pcvs{position:absolute;inset:0;pointer-events:none;z-index:1;}
+
+/* =========================================================
+   SEKCJE
+   ========================================================= */
+section{padding:88px 52px; position:relative; z-index:2;}
+.sec-inner{max-width:960px;margin:0 auto;}
+#about{background:var(--bg2);border-bottom:1px solid var(--br);}
+#interests{background:var(--bg);border-bottom:1px solid var(--br);}
+#experience{background:var(--bg2);border-bottom:1px solid var(--br);}
+#projects{background:var(--bg);border-bottom:1px solid var(--br);}
+#skills{background:var(--bg2);border-bottom:1px solid var(--br);}
+#contact{background:var(--dark);border-bottom:1px solid var(--br);}
+
+.sec-head{margin-bottom:52px;display:flex;align-items:baseline;gap:20px;flex-wrap:wrap;}
+.sec-n{
+  font-family:var(--ff);font-weight:800;font-size:11px; color:var(--bx);letter-spacing:.14em;
+  display:flex;align-items:center;gap:8px;flex-shrink:0;
+}
+.sec-n::after{content:'';display:inline-block;width:32px;height:1px;background:var(--bx);}
+.sec-t{font-family:var(--ff);font-weight:700;font-size:clamp(28px,4vw,44px);letter-spacing:-.02em;line-height:1.1;}
+
+/* ABOUT */
+.about-g{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
+.about-txt{font-size:15.5px;line-height:1.85;color:var(--tm);}
+.about-txt p+p{margin-top:14px;}
+.chips{margin-top:26px;display:flex;flex-wrap:wrap;gap:8px;}
+.chip{background:var(--bg);border:1px solid var(--br);border-radius:100px;font-size:12px;padding:6px 14px;color:var(--t);}
+
+.personality-cards{display:flex;flex-direction:column;gap:16px;}
+.p-card{
+  background:var(--bg3);border:1px solid var(--br);border-radius:8px;
+  padding:24px;border-left:4px solid var(--bx); transition:transform .2s, box-shadow .2s;
+}
+.p-card:hover{transform:translateY(-2px);box-shadow:4px 4px 0 var(--bxp);}
+.p-cat{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--bx);font-weight:700;margin-bottom:6px;}
+.p-title{font-family:var(--ff);font-weight:700;font-size:22px;color:var(--t);margin-bottom:8px;}
+.p-desc{font-size:13px;color:var(--tm);line-height:1.5;}
+
+/* FAQ (AKORDEON) */
+.faq-wrap { margin-top: 36px; }
+.faq-head { font-family: var(--ff); font-weight: 700; font-size: 18px; margin-bottom: 16px; color: var(--t); }
+.faq-item { margin-bottom: 10px; border: 1px solid var(--br); border-radius: 6px; background: var(--bg3); overflow: hidden; }
+.faq-q { padding: 16px 20px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: var(--t); font-size:14px; }
+.faq-a { padding: 0 20px; max-height: 0; opacity: 0; transition: all 0.3s ease; color: var(--tm); font-size: 14.5px; line-height:1.6; }
+.faq-item.open .faq-a { padding: 0 20px 20px; max-height: 200px; opacity: 1; }
+.faq-q::after { content: '+'; color: var(--bx); font-size: 20px; transition: transform 0.3s; font-family: monospace; }
+.faq-item.open .faq-q::after { transform: rotate(45deg); }
+
+/* ZAINTERESOWANIA (Oparte na SVG) */
+.int-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
+}
+.int-card {
+  perspective: 1000px; height: 160px;
+}
+.int-inner {
+  position: relative; width: 100%; height: 100%; text-align: center;
+  transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d;
+}
+.int-card:hover .int-inner { transform: rotateY(180deg); }
+.int-front, .int-back {
+  position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  border-radius: 8px; border: 1px solid var(--br); background: var(--bg3); padding: 20px;
+}
+.int-front .ico { margin-bottom: 12px; display: flex; align-items: center; justify-content: center; color: var(--bx); }
+.int-front .title { font-family: var(--ff); font-weight: 700; font-size: 16px; color: var(--t); }
+.int-back {
+  transform: rotateY(180deg); background: var(--bx); color: var(--bg3); border-color: var(--bx);
+}
+.int-back p { font-size: 13px; line-height: 1.5; font-weight: 500; }
+
+/* TIMELINE Z FILTRAMI */
+.exp-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:32px; }
+.exp-tab {
+  font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  padding:7px 16px;border-radius:100px;border:1px solid var(--br);
+  background:transparent;color:var(--tm);transition:all .2s;font-family:var(--fb); cursor:pointer;
+}
+.exp-tab:hover, .exp-tab.active { background:var(--bx);color:var(--bg3);border-color:var(--bx); }
+
+.tls{position:relative;padding-left:30px;max-width:720px;}
+.tls::before{content:'';position:absolute;left:6px;top:12px;bottom:12px;width:1px;background:var(--br);}
+.tl{position:relative;margin-bottom:44px; animation: fadeUp 0.4s ease forwards;}
+.tl:last-child{margin-bottom:0;}
+.tl::before{
+  content:'';position:absolute;left:-27px;top:8px; width:10px;height:10px;border-radius:50%;
+  background:var(--bx);border:2px solid var(--bg); box-shadow:0 0 0 3px var(--bxp);
+}
+.tl-d{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--bx);font-weight:600;margin-bottom:5px;}
+.tl-r{font-family:var(--ff);font-weight:700;font-size:19px;margin-bottom:3px;}
+.tl-o{font-size:13px;color:var(--tm);font-weight:500;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.tl-o::before{content:'@';color:var(--bx);font-size:11px;font-weight:700;}
+.tl-p{font-size:14px;color:var(--tm);line-height:1.75;}
+
+/* PROJECTS */
+.pf-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;}
+.pf-tab{
+  font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  padding:7px 16px;border-radius:100px;border:1px solid var(--br);
+  background:transparent;color:var(--tm);transition:all .2s;font-family:var(--fb); cursor:pointer;
+}
+.pf-tab:hover,.pf-tab.active{background:var(--bx);color:var(--bg3);border-color:var(--bx);}
+.pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;}
+.pc{
+  background:var(--bg3);border:1px solid var(--br);border-radius:4px; padding:26px 22px;
+  position:relative;overflow:hidden; transition:border-color .25s,transform .2s,box-shadow .2s;
+  cursor:pointer;
+}
+.pc:hover{border-color:var(--bx);box-shadow:4px 4px 0 var(--bxp);transform:translateY(-4px);}
+.pc[data-cat]{display:block;}
+.pc.hidden{display:none;}
+.pc-bar{position:absolute;top:0;left:0;right:0;height:3px;background:var(--bx);}
+.pc-cat{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--bx);font-weight:700;margin-bottom:10px;}
+.pc-title{font-family:var(--ff);font-weight:700;font-size:17px;line-height:1.2;margin-bottom:10px;}
+.pc-desc{font-size:13px;color:var(--tm);line-height:1.7;margin-bottom:18px;}
+.pc-bot{display:flex;justify-content:space-between;align-items:flex-end;gap:8px;flex-wrap:wrap;}
+.pc-tools{display:flex;flex-wrap:wrap;gap:5px;}
+.pt{font-size:10px;padding:4px 10px;background:var(--bg2);border:1px solid var(--br);border-radius:100px;color:var(--tm);}
+.badge{font-size:9px;letter-spacing:.06em;padding:4px 10px;border-radius:100px;font-weight:600;white-space:nowrap;}
+.b-wip{background:var(--bxp);color:var(--bx);}
+.b-plan{background:var(--bg2);color:var(--tm);}
+
+/* SKILLS RADAR */
+.skills-g{display:grid;grid-template-columns:1fr 1.2fr;gap:60px;align-items:center;}
+.chart-wrap{width:100%; max-width:400px; margin:0 auto; aspect-ratio:1/1; position: relative;}
+.chart-info {
+  text-align: center; font-size: 12px; color: var(--tm); font-style: italic; margin-top: 10px;
+}
+.skills-lists{display:grid;grid-template-columns:1fr 1fr;gap:32px;}
+.sg-t{
+  font-family:var(--ff);font-weight:700;font-size:11px; letter-spacing:.1em;
+  text-transform:uppercase;color:var(--bx); padding-bottom:10px;border-bottom:1.5px solid var(--bx);margin-bottom:14px;
+}
+.sl{list-style:none;}
+.sl li{
+  font-size:14px;color:var(--tm);padding:7px 0; border-bottom:1px solid var(--br);
+  display:flex;align-items:center;gap:8px;line-height:1.4; transition: color 0.2s;
+}
+.sl li:hover {color: var(--bx);}
+.sl li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--bx);flex-shrink:0;}
+
+.cert-box{
+  grid-column:1/-1;margin-top:8px; background:var(--bg);border:1px solid var(--br);
+  border-radius:4px;padding:18px 22px; display:flex;align-items:center;gap:16px;max-width:420px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.cert-box:hover{transform:translateY(-2px); box-shadow: 0 4px 12px var(--bxp);}
+.cert-ico{
+  width:44px;height:44px;border-radius:50%;background:var(--bx);color:var(--bg3);
+  font-family:var(--ff);font-weight:800;font-size:12px; display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.cert-nm{font-family:var(--ff);font-weight:700;font-size:15px;}
+.cert-sb{font-size:12px;color:var(--bx);margin-top:3px;}
+
+/* CONTACT & FOOTER */
+#contact { background: var(--dark); border-bottom: 1px solid var(--br); }
+.c-g{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:start;}
+.c-big{
+  font-family:var(--ff);font-weight:800; font-size:clamp(42px,7vw,80px);line-height:.92;
+  letter-spacing:-.03em; color:var(--bg3);
+}
+.c-big .ax{color:var(--bx);}
+.c-sub{font-size:14px;color:var(--br);margin-top:22px;line-height:1.75;max-width:340px;}
+.c-links{display:flex;flex-direction:column;gap:10px;}
+.c-item{
+  display:flex;align-items:center;gap:16px; padding:14px 18px;border:1px solid var(--br);
+  border-radius:4px;color:var(--bg3); background:transparent; transition:border-color .2s,transform .2s,background .2s;
+}
+.c-item:hover{border-color:var(--bx);transform:translateX(5px);background:var(--bxp); color:var(--bx);}
+.c-ico{
+  width:36px;height:36px;border-radius:50%; background:var(--bg2); color:var(--bx);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;
+}
+.c-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--br);}
+.c-val{font-size:14px;font-weight:500;margin-top:1px;}
+footer{
+  background:var(--dark);border-top:1px solid var(--br);
+  padding:20px 52px;display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:10px;color:var(--br);font-size:11px;letter-spacing:.04em;
+}
+footer strong{color:var(--bg3);font-family:var(--ff);font-weight:700;}
+
+/* MODAL */
+.modal-ov{
+  display:none;position:fixed;inset:0;z-index:200;
+  background:rgba(24,18,15,.7);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;padding:20px;
+}
+.modal-ov.open{display:flex;}
+.modal{
+  background:var(--bg3);border:1px solid var(--br);border-radius:8px;
+  max-width:620px;width:100%;max-height:85vh;overflow-y:auto; padding:40px 36px;position:relative;
+  animation:fadeUp .35s both;
+}
+.modal-close{
+  position:absolute;top:16px;right:16px;width:32px;height:32px;
+  border-radius:50%;border:1px solid var(--br);background:transparent; cursor:pointer;
+  font-size:14px;color:var(--tm);display:flex;align-items:center;justify-content:center; transition:all .2s;
+}
+.modal-close:hover{border-color:var(--bx);color:var(--bx);}
+.modal-cat{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--bx);font-weight:700;margin-bottom:10px;}
+.modal-title{font-family:var(--ff);font-weight:700;font-size:24px;margin-bottom:20px;}
+.modal-body{font-size:14.5px;color:var(--tm);line-height:1.8;}
+.modal-body h4{font-family:var(--ff);font-weight:700;font-size:14px;color:var(--bx);margin:18px 0 6px;text-transform:uppercase;letter-spacing:.06em;}
+.modal-body p+p{margin-top:10px;}
+.star-row{display:flex;flex-direction:column;gap:12px;margin-top:14px;}
+.star-item{padding:14px 16px;background:var(--bg2);border-radius:4px;border-left:3px solid var(--bx);}
+.star-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bx);margin-bottom:5px;}
+
+/* WIDŻET ANKIETY */
+.survey-widget{
+  position:fixed;bottom:20px;right:20px;z-index:150;
+  background:var(--bg3);border:1px solid var(--br); padding:16px 20px;border-radius:12px;
+  box-shadow:0 10px 25px rgba(0,0,0,.1); display:flex;flex-direction:column;gap:12px;
+  transform:translateY(150%); animation:slideInSurvey 1s 2s forwards;
+}
+.sw-title{font-size:12px;font-weight:700;color:var(--t);text-align:center;}
+.sw-emojis{display:flex;justify-content:center;gap:12px;}
+.sw-emojis button{background:transparent;border:none;font-size:24px;transition:transform .2s; cursor:pointer;}
+.sw-emojis button:hover{transform:scale(1.2);}
+.sw-thanks{display:none;font-size:13px;color:var(--bx);font-weight:700;text-align:center;padding:10px 0;}
+
+@keyframes slideInSurvey{to{transform:translateY(0);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s;}
+.reveal.in{opacity:1;transform:translateY(0);}
+
+/* Wymuszanie języka za pomocą important (BEZWZGLĘDNE!) */
+html[data-lang="pl"] .en { display: none !important; }
+html[data-lang="en"] .pl { display: none !important; }
+
+/* =========================================================
+   MOBILE FIXES
+   ========================================================= */
+@media(max-width:768px){
+  nav { padding: 10px 20px; flex-wrap: wrap; height: auto; gap: 10px; }
+  .nav-l { flex-direction: column; align-items: flex-start; gap: 15px; width: 100%; }
+  .nav-links { display: flex !important; width: 100%; overflow-x: auto; white-space: nowrap; padding-bottom: 5px; }
+  .nav-r { width: 100%; justify-content: space-between; }
+  .nav-r .btn-dl { display: inline-flex !important; }
+  
+  #hero { grid-template-columns: 1fr; padding: 40px 20px; gap: 20px; }
+  .hero-l { padding: 20px 0; }
+  .hero-r { display: flex; width: 100%; margin-top: 20px; justify-content: center; }
+  .photo-wrap { width: 240px; height: 320px; border-radius: 120px 120px 0 0; }
+  
+  section { padding: 60px 20px; }
+  .about-g, .c-g, .skills-g { grid-template-columns: 1fr; gap: 36px; }
+  .skills-lists { grid-template-columns: 1fr; }
+  .survey-widget { left: 20px; right: 20px; bottom: 20px; }
+  #goose-tracker { display: none; }
+  
+  .h-name { font-size: 3rem; }
+}
+
+/* =========================================================
+   GĄSKA - STYLIZACJE 
+   ========================================================= */
+#goose-tracker {
+    --p: 4px; position: absolute; top: 50px; right: 80px;
+    width: calc(12 * var(--p)); height: calc(17 * var(--p)); z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.01); cursor: pointer;
+}
+#goose-body {
+    width: var(--p); height: var(--p); background: transparent;
+    box-shadow:
+        calc(4*var(--p)) calc(1*var(--p)) #1a1a1a, calc(5*var(--p)) calc(1*var(--p)) #1a1a1a, calc(6*var(--p)) calc(1*var(--p)) #1a1a1a,
+        calc(3*var(--p)) calc(2*var(--p)) #1a1a1a, calc(7*var(--p)) calc(2*var(--p)) #1a1a1a,
+        calc(2*var(--p)) calc(3*var(--p)) #1a1a1a, calc(5*var(--p)) calc(3*var(--p)) #1a1a1a, calc(7*var(--p)) calc(3*var(--p)) #1a1a1a,
+        calc(3*var(--p)) calc(4*var(--p)) #1a1a1a, calc(7*var(--p)) calc(4*var(--p)) #1a1a1a,
+        calc(4*var(--p)) calc(5*var(--p)) #1a1a1a, calc(7*var(--p)) calc(5*var(--p)) #1a1a1a,
+        calc(4*var(--p)) calc(6*var(--p)) #1a1a1a, calc(7*var(--p)) calc(6*var(--p)) #1a1a1a,
+        calc(4*var(--p)) calc(7*var(--p)) #1a1a1a, calc(7*var(--p)) calc(7*var(--p)) #1a1a1a,
+        calc(4*var(--p)) calc(8*var(--p)) #1a1a1a, calc(8*var(--p)) calc(8*var(--p)) #1a1a1a, calc(9*var(--p)) calc(8*var(--p)) #1a1a1a,
+        calc(3*var(--p)) calc(9*var(--p)) #1a1a1a, calc(9*var(--p)) calc(9*var(--p)) #1a1a1a,
+        calc(3*var(--p)) calc(10*var(--p)) #1a1a1a, calc(10*var(--p)) calc(10*var(--p)) #1a1a1a,
+        calc(3*var(--p)) calc(11*var(--p)) #1a1a1a, calc(11*var(--p)) calc(11*var(--p)) #1a1a1a,
+        calc(3*var(--p)) calc(12*var(--p)) #1a1a1a, calc(11*var(--p)) calc(12*var(--p)) #1a1a1a,
+        calc(4*var(--p)) calc(13*var(--p)) #1a1a1a, calc(10*var(--p)) calc(13*var(--p)) #1a1a1a,
+        calc(5*var(--p)) calc(14*var(--p)) #1a1a1a, calc(6*var(--p)) calc(14*var(--p)) #1a1a1a, calc(7*var(--p)) calc(14*var(--p)) #1a1a1a, calc(8*var(--p)) calc(14*var(--p)) #1a1a1a, calc(9*var(--p)) calc(14*var(--p)) #1a1a1a, calc(10*var(--p)) calc(14*var(--p)) #1a1a1a,
+        calc(5*var(--p)) calc(15*var(--p)) #1a1a1a, calc(8*var(--p)) calc(15*var(--p)) #1a1a1a, calc(10*var(--p)) calc(15*var(--p)) #1a1a1a,
+        calc(5*var(--p)) calc(16*var(--p)) #1a1a1a, calc(6*var(--p)) calc(16*var(--p)) #1a1a1a, calc(7*var(--p)) calc(16*var(--p)) #1a1a1a, calc(8*var(--p)) calc(16*var(--p)) #1a1a1a, calc(9*var(--p)) calc(16*var(--p)) #1a1a1a, calc(10*var(--p)) calc(16*var(--p)) #1a1a1a,
+        calc(4*var(--p)) calc(2*var(--p)) #ffffff, calc(5*var(--p)) calc(2*var(--p)) #ffffff, calc(6*var(--p)) calc(2*var(--p)) #ffffff,
+        calc(6*var(--p)) calc(3*var(--p)) #ffffff,
+        calc(4*var(--p)) calc(4*var(--p)) #ffffff, calc(5*var(--p)) calc(4*var(--p)) #ffffff, calc(6*var(--p)) calc(4*var(--p)) #ffffff,
+        calc(5*var(--p)) calc(5*var(--p)) #ffffff, calc(6*var(--p)) calc(5*var(--p)) #ffffff,
+        calc(5*var(--p)) calc(6*var(--p)) #ffffff, calc(6*var(--p)) calc(6*var(--p)) #ffffff,
+        calc(5*var(--p)) calc(7*var(--p)) #ffffff, calc(6*var(--p)) calc(7*var(--p)) #ffffff,
+        calc(5*var(--p)) calc(8*var(--p)) #ffffff, calc(6*var(--p)) calc(8*var(--p)) #ffffff, calc(7*var(--p)) calc(8*var(--p)) #ffffff,
+        calc(4*var(--p)) calc(9*var(--p)) #ffffff, calc(5*var(--p)) calc(9*var(--p)) #ffffff, calc(6*var(--p)) calc(9*var(--p)) #ffffff, calc(7*var(--p)) calc(9*var(--p)) #ffffff, calc(8*var(--p)) calc(9*var(--p)) #ffffff,
+        calc(4*var(--p)) calc(10*var(--p)) #ffffff, calc(5*var(--p)) calc(10*var(--p)) #ffffff, calc(6*var(--p)) calc(10*var(--p)) #ffffff, calc(7*var(--p)) calc(10*var(--p)) #ffffff, calc(8*var(--p)) calc(10*var(--p)) #ffffff, calc(9*var(--p)) calc(10*var(--p)) #ffffff,
+        calc(4*var(--p)) calc(11*var(--p)) #ffffff, calc(5*var(--p)) calc(11*var(--p)) #ffffff, calc(6*var(--p)) calc(11*var(--p)) #ffffff, calc(7*var(--p)) calc(11*var(--p)) #ffffff, calc(8*var(--p)) calc(11*var(--p)) #ffffff, calc(9*var(--p)) calc(11*var(--p)) #ffffff, calc(10*var(--p)) calc(11*var(--p)) #ffffff,
+        calc(4*var(--p)) calc(12*var(--p)) #ffffff, calc(5*var(--p)) calc(12*var(--p)) #ffffff, calc(6*var(--p)) calc(12*var(--p)) #ffffff, calc(7*var(--p)) calc(12*var(--p)) #ffffff, calc(8*var(--p)) calc(12*var(--p)) #ffffff, calc(9*var(--p)) calc(12*var(--p)) #ffffff, calc(10*var(--p)) calc(12*var(--p)) #ffffff,
+        calc(5*var(--p)) calc(13*var(--p)) #ffffff, calc(6*var(--p)) calc(13*var(--p)) #ffffff, calc(7*var(--p)) calc(13*var(--p)) #ffffff, calc(8*var(--p)) calc(13*var(--p)) #ffffff, calc(9*var(--p)) calc(13*var(--p)) #ffffff,
+        calc(3*var(--p)) calc(3*var(--p)) #cf6a4c, calc(4*var(--p)) calc(3*var(--p)) #cf6a4c,
+        calc(6*var(--p)) calc(15*var(--p)) #cf6a4c, calc(7*var(--p)) calc(15*var(--p)) #cf6a4c, calc(9*var(--p)) calc(15*var(--p)) #cf6a4c;
+}
+@keyframes waddle { 0% { transform: rotate(-8deg) translateY(0); } 50% { transform: rotate(8deg) translateY(-4px); } 100% { transform: rotate(-8deg) translateY(0); } }
+@keyframes jump { 0% { transform: scale(1) translateY(0); } 50% { transform: scale(1.3) translateY(-15px); } 100% { transform: scale(1) translateY(0); } }
+.walking { animation: waddle 0.3s infinite; }
+.jumping { animation: jump 0.4s ease-in-out; }
+#bubble {
+    position: absolute; top: -20px; left: -50px; background: #ffffff; color: #000;
+    padding: 4px 8px; border-radius: 8px; border: 2px solid #1a1a1a;
+    font-weight: bold; font-size: 12px; opacity: 0; pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s; transform: translateY(10px); white-space: nowrap;
+}
+#bubble::after {
+    content: ''; position: absolute; bottom: -6px; right: 15px; border-width: 6px 6px 0;
+    border-style: solid; border-color: #1a1a1a transparent transparent transparent;
+}
+#goose-tracker.honking #bubble { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<nav>
+  <div class="nav-l">
+    <a class="nav-logo" href="#hero">BG ✦</a>
+    <div class="nav-links">
+      <a href="#about"><span class="pl">O mnie</span><span class="en">About</span></a>
+      <a href="#interests"><span class="pl">Zainteresowania</span><span class="en">Interests</span></a>
+      <a href="#experience"><span class="pl">Doświadczenie</span><span class="en">Experience</span></a>
+      <a href="#projects"><span class="pl">Projekty</span><span class="en">Projects</span></a>
+      <a href="#skills"><span class="pl">Umiejętności</span><span class="en">Skills</span></a>
+      <a href="#contact"><span class="pl">Kontakt</span><span class="en">Contact</span></a>
+    </div>
+  </div>
+  <div class="nav-r">
+    <a href="cv-barbara-gwozdz.pdf" download class="nav-btn btn-dl">
+      <span class="pl">Pobierz CV</span><span class="en">Download CV</span>
+    </a>
+    <button class="nav-btn btn-lang" onclick="toggleLang()">EN / PL</button>
+    <button class="btn-dark" onclick="toggleDark()" id="darkBtn" title="Dark mode">☽</button>
+  </div>
+</nav>
+
+<section id="hero">
+  <canvas id="pcvs"></canvas>
+  <div class="hero-l">
+    <div class="h-eye">
+      <span class="pl">Portfolio — HR & People Analytics</span>
+      <span class="en">Portfolio — HR & People Analytics</span>
+    </div>
+    <h1 class="h-name">Barbara<br><span class="ax">Gwóźdź</span></h1>
+    <div class="h-body">
+      <p class="h-desc pl">
+        Studentka International Business z pasją do <span class="h-kw">HR<span class="kw-tip">👥</span></span>,
+        <span class="h-kw">People Analytics<span class="kw-tip">📊</span></span>
+        i <span class="h-kw">psychologii<span class="kw-tip">🧠</span></span> pracy.
+        Łączę <span class="h-kw">dane<span class="kw-tip">📈</span></span> z empatią, analizę z ludźmi.
+      </p>
+      <p class="h-desc en">
+        International Business student passionate about <span class="h-kw">HR<span class="kw-tip">👥</span></span>,
+        <span class="h-kw">People Analytics<span class="kw-tip">📊</span></span>
+        and <span class="h-kw">psychology<span class="kw-tip">🧠</span></span> of work.
+        Connecting <span class="h-kw">data<span class="kw-tip">📈</span></span> with empathy.
+      </p>
+      <div class="h-actions">
+        <a href="cv-barbara-gwozdz.pdf" download class="h-cta">
+          ⬇ <span class="pl">Pobierz CV</span><span class="en">Download CV</span>
+        </a>
+        <a href="#contact" class="h-cta-ghost">
+          <span class="pl">Napisz do mnie</span><span class="en">Get in touch</span>
+        </a>
+      </div>
+      <div class="h-pills">
+        <span class="pill"><span class="pl">Analiza Danych HR</span><span class="en">People Analytics</span></span>
+        <span class="pill"><span class="pl">Rozwój i Szkolenia</span><span class="en">Learning & Development</span></span>
+        <span class="pill"><span class="pl">HR & Psychologia</span><span class="en">HR & Psychology</span></span>
+        <span class="pill"><span class="pl">Sztuczna Inteligencja</span><span class="en">AI in HR</span></span>
+        <span class="pill"><span class="pl">Zarządzanie Projektami</span><span class="en">Project Management</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-r">
+    <div class="photo-wrap">
+      <img id="profilePhoto" src="" alt="Barbara Gwóźdź" style="display:none;" onload="this.style.display='block'; this.nextElementSibling.style.display='none';">
+      <div class="photo-placeholder-text"><span class="pl">Miejsce<br>na zdjęcie</span><span class="en">Place for<br>photo</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="sec-inner">
+    <div class="sec-head reveal">
+      <span class="sec-n">01</span>
+      <h2 class="sec-t"><span class="pl">O mnie & Osobowość</span><span class="en">About me & Personality</span></h2>
+    </div>
+    <div class="about-g reveal">
+      <div>
+        <div class="about-txt">
+          <p class="pl">Jestem studentką III roku International Business na Uniwersytecie Ekonomicznym we Wrocławiu z praktycznym doświadczeniem w obszarze Talent Development oraz HR i PR.</p>
+          <p class="pl">Wierzę, że najlepsze decyzje o ludziach podejmuje się łącząc liczby z empatią. Dlatego rozwijam się równolegle w People Analytics i Learning & Development, eksplorując też zastosowania AI w HR.</p>
+          <p class="pl">Aktywnie działam w Niezależnym Zrzeszeniu Studentów na poziomie lokalnym i krajowym, gdzie koordynuję projekty i buduję doświadczenie w zarządzaniu zespołami.</p>
+          <p class="en">I am a 3rd-year International Business student at the University of Economics in Wrocław, with hands-on experience in Talent Development, HR and PR.</p>
+          <p class="en">I believe the best people decisions are made by combining numbers with empathy. That's why I develop in People Analytics and Learning & Development simultaneously, also exploring AI applications in HR.</p>
+          <p class="en">I am actively involved in the Independent Students' Association (NZS) at the local and national levels, coordinating projects and building experience in team management.</p>
+        </div>
+        
+        <div class="faq-wrap">
+          <div class="faq-head"><span class="pl">O co często pytają rekruterzy?</span><span class="en">Frequently Asked Questions</span></div>
+          <div class="faq-item">
+            <div class="faq-q"><span class="pl">Dlaczego HR i People Analytics?</span><span class="en">Why HR and People Analytics?</span></div>
+            <div class="faq-a"><span class="pl">Ponieważ łączę empatię do ludzi z twardym, analitycznym myśleniem. Wierzę, że mądre zarządzanie danymi pozwala tworzyć przyjazne i efektywne środowisko pracy, w którym każdy pracownik czuje się doceniony.</span><span class="en">Because I combine empathy for people with hard, analytical thinking. I believe smart data management helps create a friendly and effective work environment where every employee feels valued.</span></div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q"><span class="pl">Jakie są moje najmocniejsze strony?</span><span class="en">What are my key strengths?</span></div>
+            <div class="faq-a"><span class="pl">Szybko przyswajam nową wiedzę, wykazuję dużą zdolność adaptacji (ENFP) i świetnie odnajduję się w dynamicznym zespole. Moja koordynacja w NZS nauczyła mnie również brania pełnej odpowiedzialności za powierzone zadania.</span><span class="en">I absorb new knowledge quickly, have high adaptability (ENFP), and thrive in a dynamic team. Coordinating projects at NZS also taught me how to take full ownership of entrusted tasks.</span></div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q"><span class="pl">Gdzie widzę się za 3 lata?</span><span class="en">Where do I see myself in 3 years?</span></div>
+            <div class="faq-a"><span class="pl">Jako ekspertka sprawnie łącząca miękkie procesy L&D z analizą danych HR, która proaktywnie wdraża nowoczesne i mądre rozwiązania (np. wsparcie sztucznej inteligencji) do codziennej pracy zespołów.</span><span class="en">As an expert efficiently bridging soft L&D processes with HR data analysis, proactively implementing modern and smart solutions (like AI support) into teams' daily work.</span></div>
+          </div>
+        </div>
+        
+        <div class="chips" style="margin-top:20px;">
+          <span class="chip"><span class="pl">Psychologia pracy</span><span class="en">Work Psychology</span></span>
+          <span class="chip"><span class="pl">Analityka HR</span><span class="en">Data-driven HR</span></span>
+          <span class="chip"><span class="pl">Budowanie wizerunku pracodawcy</span><span class="en">Employer Branding</span></span>
+          <span class="chip"><span class="pl">Zarządzanie projektami</span><span class="en">Project Management</span></span>
+          <span class="chip"><span class="pl">Zarządzanie międzynarodowe</span><span class="en">International Management</span></span>
+        </div>
+      </div>
+      <div class="personality-cards">
+        <div class="p-card">
+          <div class="p-cat">Osobowość</div>
+          <div class="p-title">MBTI: ENFP</div>
+          <div class="p-desc pl">Pełna entuzjazmu, kreatywna i zorientowana na ludzi. Szybko łączę kropki i szukam nieszablonowych rozwiązań, świetnie odnajdując się w dynamicznych wyzwaniach oraz pracy zespołowej.</div>
+          <div class="p-desc en">Enthusiastic, creative, and people-oriented. I quickly connect the dots and look for unconventional solutions, thriving in dynamic challenges and teamwork.</div>
+        </div>
+        <div class="p-card">
+          <div class="p-cat">Styl poznawczy</div>
+          <div class="p-title">FRIS®: Partner / Humanista</div>
+          <div class="p-desc pl">Działam przez pryzmat relacji i wyobraźni. Naturalnie dostrzegam emocje, dbam o empatię w zespole i potrafię inspirować innych swoimi pomysłami. Moja elastyczność pozwala mi widzieć szeroki kontekst każdej sytuacji.</div>
+          <div class="p-desc en">I act through the prism of relationships and imagination. I naturally perceive emotions, care for empathy in the team, and can inspire others.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="interests">
+  <div class="sec-inner">
+    <div class="sec-head reveal">
+      <span class="sec-n">01.5</span>
+      <h2 class="sec-t"><span class="pl">Zainteresowania</span><span class="en">Interests</span></h2>
+    </div>
+    <div class="int-grid reveal">
+      <div class="int-card">
+        <div class="int-inner">
+          <div class="int-front">
+            <div class="ico">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
+            </div>
+            <div class="title pl">Psychologia</div>
+            <div class="title en">Psychology</div>
+          </div>
+          <div class="int-back">
+            <p class="pl">Zgłębiam mechanizmy motywacji ludzkiej, behawioryzm i psychologię organizacji.</p>
+            <p class="en">Exploring human motivation mechanisms, behaviorism, and organizational psychology.</p>
+          </div>
+        </div>
+      </div>
+      <div class="int-card">
+        <div class="int-inner">
+          <div class="int-front">
+            <div class="ico">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+            </div>
+            <div class="title pl">AI na co dzień</div>
+            <div class="title en">AI in Daily Use</div>
+          </div>
+          <div class="int-back">
+            <p class="pl">Odkrywam nowe sposoby wykorzystania LLM w życiu, badam psychologię AI i jej wpływ na społeczeństwo.</p>
+            <p class="en">Learning new ways to use LLMs in daily tasks, psychology of AI and changes it brings to society.</p>
+          </div>
+        </div>
+      </div>
+      <div class="int-card">
+        <div class="int-inner">
+          <div class="int-front">
+            <div class="ico">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="15" y1="13" x2="15.01" y2="13"/><line x1="18" y1="11" x2="18.01" y2="11"/><rect x="2" y="6" width="20" height="12" rx="2"/></svg>
+            </div>
+            <div class="title pl">Gry Wideo</div>
+            <div class="title en">Video Games</div>
+          </div>
+          <div class="int-back">
+            <p class="pl">Pasjonuję się grami RPG, grami strategicznymi oraz rozbudowanymi symulatorami życia.</p>
+            <p class="en">Passionate about RPGs, strategic games, and advanced life simulators.</p>
+          </div>
+        </div>
+      </div>
+      <div class="int-card">
+        <div class="int-inner">
+          <div class="int-front">
+            <div class="ico">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            </div>
+            <div class="title pl">Sztuka i Muzea</div>
+            <div class="title en">Art & Museums</div>
+          </div>
+          <div class="int-back">
+            <p class="pl">Fascynuje mnie dziedzictwo kulturowe, sztuka i historia na przestrzeni wieków.</p>
+            <p class="en">Passionate about cultural heritage, art, and exploring history.</p>
+          </div>
+        </div>
+      </div>
+      <div class="int-card">
+        <div class="int-inner">
+          <div class="int-front">
+            <div class="ico">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="title pl">Zarządzanie HR</div>
+            <div class="title en">HR Management</div>
+          </div>
+          <div class="int-back">
+            <p class="pl">Zgłębiam najnowsze techniki w nowoczesnym i skutecznym zarządzaniu zasobami ludzkimi.</p>
+            <p class="en">Expanding knowledge in modern and effective human resources management techniques.</p>
+          </div>
+        </div>
+      </div>
+      <div class="int-card">
+        <div class="int-inner">
+          <div class="int-front">
+            <div class="ico">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
+            <div class="title pl">Ekonomia na co dzień</div>
+            <div class="title en">Daily Life Economics</div>
+          </div>
+          <div class="int-back">
+            <p class="pl">Uczę się odpowiedzialnego zarządzania finansami i zrozumienia otaczających mnie zjawisk ekonomicznych.</p>
+            <p class="en">Learning how to manage finances responsibly and understanding economic phenomena around me.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="sec-inner">
+    <div class="sec-head reveal">
+      <span class="sec-n">02</span>
+      <h2 class="sec-t"><span class="pl">Doświadczenie</span><span class="en">Experience</span></h2>
+    </div>
+    
+    <div class="exp-tabs reveal">
+      <button class="exp-tab active" data-filter="all"><span class="pl">Wszystkie</span><span class="en">All</span></button>
+      <button class="exp-tab" data-filter="work"><span class="pl">Doświadczenie Zawodowe</span><span class="en">Work Experience</span></button>
+      <button class="exp-tab" data-filter="vol"><span class="pl">Wolontariat</span><span class="en">Volunteering</span></button>
+      <button class="exp-tab" data-filter="org"><span class="pl">Organizacje Studenckie</span><span class="en">Student Orgs</span></button>
+    </div>
+
+    <div class="tls reveal">
+      <div class="tl" data-type="work">
+        <div class="tl-d"><span class="pl">Lipiec - Wrzesień 2025</span><span class="en">July - September 2025</span></div>
+        <div class="tl-r">Talent Development Intern</div>
+        <div class="tl-o">AmRest Holdings</div>
+        <div class="tl-p pl">Trzymiesięczny staż w globalnym dziale Talent Development. Administracja platformami HR (LMS, SyncPeople), wsparcie procesów IDP, raportowanie wyników Talent Review. Tworzenie materiałów szkoleniowych i profesjonalnych prezentacji biznesowych.</div>
+        <div class="tl-p en">Three-month internship in global Talent Development. HR platform administration (LMS, SyncPeople), IDP process support, Talent Review reporting, training materials and business presentations.</div>
+      </div>
+      <div class="tl" data-type="vol">
+        <div class="tl-d"><span class="pl">Wrzesień 2025</span><span class="en">September 2025</span></div>
+        <div class="tl-r">Junior Staff — <span class="pl">Wolontariat</span><span class="en">Volunteer</span></div>
+        <div class="tl-o"><span class="pl">Forum Ekonomiczne w Karpaczu (34. edycja)</span><span class="en">Economic Forum in Karpacz (34th ed.)</span></div>
+        <div class="tl-p pl">Udział w prestiżowym programie wolontariatu Junior Staff w sekcji Wjazdówek. Obsługa jednego z największych wydarzeń ekonomicznych w Europie Środkowej.</div>
+        <div class="tl-p en">Volunteer program at one of Central Europe's most prestigious economic forums, 34th edition.</div>
+      </div>
+      <div class="tl" data-type="org">
+        <div class="tl-d"><span class="pl">Od 2023 — Kadencja 2025/2026</span><span class="en">Since 2023 — 2025/2026 Term</span></div>
+        <div class="tl-r"><span class="pl">Specjalistka ds. Promocji Inicjatyw (Pion HR)</span><span class="en">Initiatives Promotion Specialist (HR Division)</span></div>
+        <div class="tl-o"><span class="pl">Niezależne Zrzeszenie Studentów — Zespół Krajowy</span><span class="en">Independent Students' Association — National Team</span></div>
+        <div class="tl-p pl">Ogólnopolska działalność studencka w Pionie HR w Zespole Krajowym NZS. Specjalistka ds. Promocji Inicjatyw Wewnętrznych w kadencji 2025/2026.</div>
+        <div class="tl-p en">National-level student activity in the HR Division at NZS National Team. Internal Initiatives Promotion Specialist for 2025/2026 term.</div>
+      </div>
+      <div class="tl" data-type="org">
+        <div class="tl-d"><span class="pl">Od 2023 — działalność lokalna</span><span class="en">Since 2023 — Local Activity</span></div>
+        <div class="tl-r"><span class="pl">Działalność (Wizerunek, HR, Kontakty Zew.)</span><span class="en">Activity (Branding, HR, External Relations)</span></div>
+        <div class="tl-o">NZS UE Wrocław</div>
+        <div class="tl-p pl">Członkini NZS UE we Wrocławiu. Działalność w obszarze Wizerunku, HR oraz Kontaktów Zewnętrznych. Udział w 14 projektach, w tym samodzielne koordynowanie projektu Prawie Kino 2026.</div>
+        <div class="tl-p en">Member at UE Wrocław chapter — Branding, HR and External Relations. Part of 14 projects including independently coordinating Prawie Kino 2026.</div>
+      </div>
+      <div class="tl" data-type="work">
+        <div class="tl-d"><span class="pl">Lipiec 2024</span><span class="en">July 2024</span></div>
+        <div class="tl-r"><span class="pl">Stażystka w Biurze Controllingu</span><span class="en">Controlling Intern</span></div>
+        <div class="tl-o">Legrand Polska</div>
+        <div class="tl-p pl">Miesięczny staż w ramach programu letniego. Praca z danymi finansowymi, analityczne raportowanie, wsparcie operacyjne działu controllingu.</div>
+        <div class="tl-p en">Monthly summer internship in Controlling. Financial data work, analytical reporting, operational support.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="sec-inner">
+    <div class="sec-head reveal">
+      <span class="sec-n">03</span>
+      <h2 class="sec-t"><span class="pl">Projekty Portfolio</span><span class="en">Portfolio Projects</span></h2>
+    </div>
+    <div class="pf-tabs reveal">
+      <button class="pf-tab active" data-filter="all"><span class="pl">Wszystkie</span><span class="en">All</span></button>
+      <button class="pf-tab" data-filter="analytics">People Analytics</button>
+      <button class="pf-tab" data-filter="ld">L&D</button>
+      <button class="pf-tab" data-filter="mgmt"><span class="pl">Zarządzanie</span><span class="en">Management</span></button>
+      <button class="pf-tab" data-filter="ai">AI in HR</button>
+    </div>
+    <div class="pg reveal">
+      <div class="pc" data-cat="analytics" onclick="openModal('m1')">
+        <div class="pc-bar"></div>
+        <div class="pc-cat">People Analytics</div>
+        <div class="pc-title">Attrition Dashboard — <span class="pl">Analiza Rotacji</span><span class="en">Turnover Analysis</span></div>
+        <div class="pc-desc pl">Interaktywny dashboard rotacji pracowników (IBM HR Analytics Dataset) z rekomendacjami biznesowymi.</div>
+        <div class="pc-desc en">Interactive employee attrition dashboard with business recommendations.</div>
+        <div class="pc-bot">
+          <div class="pc-tools"><span class="pt">Power BI</span><span class="pt">Excel</span></div>
+          <span class="badge b-wip"><span class="pl">W trakcie</span><span class="en">In Progress</span></span>
+        </div>
+      </div>
+      <div class="pc" data-cat="ld" onclick="openModal('m2')">
+        <div class="pc-bar"></div>
+        <div class="pc-cat">Learning & Development</div>
+        <div class="pc-title">30-Day Onboarding Blueprint</div>
+        <div class="pc-desc pl">Kompletny plan 30-dniowego onboardingu dla Junior HR Specialist z mikrolernigiem.</div>
+        <div class="pc-desc en">Complete 30-day onboarding plan for Junior HR with microlearning.</div>
+        <div class="pc-bot">
+          <div class="pc-tools"><span class="pt">Notion</span><span class="pt">Canva</span></div>
+          <span class="badge b-wip"><span class="pl">W trakcie</span><span class="en">In Progress</span></span>
+        </div>
+      </div>
+      <div class="pc" data-cat="analytics" onclick="openModal('m3')">
+        <div class="pc-bar"></div>
+        <div class="pc-cat">Employee Engagement</div>
+        <div class="pc-title">Pulse Survey — Engagement Analysis</div>
+        <div class="pc-desc pl">Analiza ankiety zaangażowania zdalnego zespołu. Raport z wnioskami dla managera.</div>
+        <div class="pc-desc en">Remote team engagement survey analysis. Report with insights for management.</div>
+        <div class="pc-bot">
+          <div class="pc-tools"><span class="pt">Forms</span><span class="pt">Sheets</span></div>
+          <span class="badge b-plan"><span class="pl">Planowane</span><span class="en">Planned</span></span>
+        </div>
+      </div>
+      <div class="pc" data-cat="mgmt" onclick="openModal('m4')">
+        <div class="pc-bar"></div>
+        <div class="pc-cat">Project Management</div>
+        <div class="pc-title">Prawie Kino 2026 — Case Study STAR</div>
+        <div class="pc-desc pl">Analiza biznesowa projektu metodą STAR. Koordynacja zespołu i budżetu.</div>
+        <div class="pc-desc en">Business analysis of project using STAR method. Team and budget coordination.</div>
+        <div class="pc-bot">
+          <div class="pc-tools"><span class="pt">Notion</span><span class="pt">PowerPoint</span></div>
+          <span class="badge b-wip"><span class="pl">W trakcie</span><span class="en">In Progress</span></span>
+        </div>
+      </div>
+      <div class="pc" data-cat="ai" onclick="openModal('m5')">
+        <div class="pc-bar"></div>
+        <div class="pc-cat">AI in HR</div>
+        <div class="pc-title">AI <span class="pl">w</span><span class="en">in</span> L&D <span class="pl">i</span><span class="en">&</span> People Analytics</div>
+        <div class="pc-desc pl">Research brief: zastosowanie AI w procesach HR, automatyzacja i wyzwania etyczne.</div>
+        <div class="pc-desc en">Research brief: AI applications in HR processes, automation, and ethics.</div>
+        <div class="pc-bot">
+          <div class="pc-tools"><span class="pt">Research</span><span class="pt">Canva</span></div>
+          <span class="badge b-plan"><span class="pl">Planowane</span><span class="en">Planned</span></span>
+        </div>
+      </div>
+      <div class="pc" data-cat="ld" onclick="openModal('m6')" style="border-style:dashed;opacity:.6;">
+        <div class="pc-bar" style="background:var(--br);"></div>
+        <div class="pc-cat" style="color:var(--tm);"><span class="pl">Wkrótce</span><span class="en">Coming Soon</span></div>
+        <div class="pc-title" style="color:var(--tm);">E-learning Module — Feedback SBI</div>
+        <div class="pc-desc pl">15-minutowy moduł e-learningowy o feedbacku techniką SBI dla managerów.</div>
+        <div class="pc-desc en">15-minute e-learning module on SBI feedback technique for managers.</div>
+        <div class="pc-bot">
+          <div class="pc-tools"><span class="pt">Articulate</span><span class="pt">Canva</span></div>
+          <span class="badge b-plan"><span class="pl">Planowane</span><span class="en">Planned</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="sec-inner">
+    <div class="sec-head reveal">
+      <span class="sec-n">04</span>
+      <h2 class="sec-t"><span class="pl">Umiejętności & Narzędzia</span><span class="en">Skills & Tools</span></h2>
+    </div>
+    <div class="skills-g reveal">
+      <div>
+        <div class="chart-wrap">
+          <canvas id="radarChart"></canvas>
+        </div>
+        <div class="chart-info pl">Najeżdżaj na punkty wykresu, aby zobaczyć szczegóły!</div>
+        <div class="chart-info en">Hover over the chart points to see details!</div>
+      </div>
+      <div>
+        <div class="skills-lists">
+          <div>
+            <div class="sg-t">HR & Analytics</div>
+            <ul class="sl">
+              <li>People Analytics</li>
+              <li><span class="pl">Platformy LMS & SyncPeople</span><span class="en">LMS & SyncPeople Platforms</span></li>
+              <li><span class="pl">Projektowanie L&D</span><span class="en">L&D Design</span></li>
+              <li>Talent Review & IDP</li>
+              <li>Employer Branding</li>
+            </ul>
+          </div>
+          <div>
+            <div class="sg-t"><span class="pl">Narzędzia</span><span class="en">Tools</span></div>
+            <ul class="sl">
+              <li>Microsoft 365</li>
+              <li><span class="pl">Power BI (w trakcie)</span><span class="en">Power BI (Learning)</span></li>
+              <li>Canva & Notion</li>
+              <li>Google Workspace</li>
+              <li><span class="pl">Narzędzia AI</span><span class="en">AI Tools</span> (ChatGPT, Copilot)</li>
+            </ul>
+          </div>
+          <div>
+            <div class="sg-t"><span class="pl">Kompetencje</span><span class="en">Soft Skills</span></div>
+            <ul class="sl">
+              <li><span class="pl">Koordynacja projektów</span><span class="en">Project coordination</span></li>
+              <li><span class="pl">Zarządzanie zespołem</span><span class="en">Team management</span></li>
+              <li><span class="pl">Angielski C1</span><span class="en">English C1</span></li>
+              <li><span class="pl">Analiza danych</span><span class="en">Data analysis</span></li>
+              <li><span class="pl">Prezentacje biznesowe</span><span class="en">Business presentations</span></li>
+            </ul>
+          </div>
+          <div class="cert-box">
+            <div class="cert-ico">AI</div>
+            <div>
+              <div class="cert-nm">AI in Business Development</div>
+              <div class="cert-sb">Google Umiejętności Jutra 2025</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="sec-inner">
+    <div class="sec-head reveal">
+      <span class="sec-n">05</span>
+      <h2 class="sec-t"><span class="pl">Kontakt</span><span class="en">Contact</span></h2>
+    </div>
+    <div class="c-g reveal">
+      <div>
+        <div class="c-big">Let's<br>talk<span class="ax">.</span></div>
+        <div class="c-sub pl">Szukam możliwości stażowych i projektowych w obszarze HR, L&D lub People Analytics. Napisz do mnie!</div>
+        <div class="c-sub en">Looking for internship and project opportunities in HR, L&D or People Analytics. Let's connect!</div>
+      </div>
+      <div class="c-links">
+        <a class="c-item" href="mailto:bgwozdz521@gmail.com">
+          <div class="c-ico">✉</div>
+          <div><div class="c-lbl">Email</div><div class="c-val">bgwozdz521@gmail.com</div></div>
+        </a>
+        <a class="c-item" href="https://www.linkedin.com/in/barbara-gw%C3%B3%C5%BAd%C5%BA-63b1942a0" target="_blank" rel="noopener">
+          <div class="c-ico" style="font-size:12px;font-weight:700;">in</div>
+          <div><div class="c-lbl">LinkedIn</div><div class="c-val">barbara-gwozdz</div></div>
+        </a>
+        <a class="c-item" href="tel:+48506812096">
+          <div class="c-ico">☎</div>
+          <div><div class="c-lbl"><span class="pl">Telefon</span><span class="en">Phone</span></div><div class="c-val">+48 506 812 096</div></div>
+        </a>
+        <div class="c-item" style="cursor:default;">
+          <div class="c-ico">◈</div>
+          <div><div class="c-lbl pl">Lokalizacja</div><div class="c-lbl en">Location</div><div class="c-val pl">Wrocław, Polska</div><div class="c-val en">Wrocław, Poland</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <strong>Barbara Gwóźdź ✦ Portfolio 2025</strong><br>
+    <span>HR · People Analytics · L&D · International Business · UE Wrocław</span>
+  </div>
+  <div><span class="pl">Odwiedziny profilu:</span><span class="en">Profile visits:</span> <strong id="visit-count">0</strong></div>
+</footer>
+
+<div class="modal-ov" id="m1">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m1')">✕</button>
+    <div class="modal-cat">People Analytics</div>
+    <div class="modal-title">Attrition Dashboard</div>
+    <div class="modal-body">
+      <p class="pl">Interaktywny dashboard oparty na IBM HR Analytics Employee Attrition dataset (dostępnym na Kaggle). Celem projektu jest zidentyfikowanie kluczowych czynników wpływających na rotację pracowników i przełożenie ich na rekomendacje biznesowe.</p>
+      <p class="en">Interactive dashboard based on the IBM HR Analytics Employee Attrition dataset. The project goal is to identify key factors influencing employee turnover and translate them into business recommendations.</p>
+      <h4 class="pl">Zakres projektu</h4><h4 class="en">Project Scope</h4>
+      <p class="pl">Analiza 1470 rekordów, wizualizacja wskaźników KPI (attrition rate, tenure, salary bands) w Power BI. Segmentacja według departamentu, stanowiska i poziomu zaangażowania.</p>
+      <p class="en">Analysis of 1470 records, KPI visualization (attrition rate, tenure) in Power BI. Segmentation by department, role, and engagement level.</p>
+      <div class="pc-tools" style="margin-top:16px;"><span class="pt">Power BI</span><span class="pt">Excel</span><span class="pt">Kaggle</span></div>
+    </div>
+  </div>
+</div>
+<div class="modal-ov" id="m2">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m2')">✕</button>
+    <div class="modal-cat">Learning & Development</div>
+    <div class="modal-title">30-Day Onboarding Blueprint</div>
+    <div class="modal-body">
+      <p class="pl">Kompletny plan wdrożenia nowego pracownika. Łączy metodologię 70-20-10 z mikrolerningiem i grywalizacją.</p>
+      <p class="en">A complete onboarding plan combining 70-20-10 methodology with microlearning and gamification.</p>
+      <h4 class="pl">Struktura (30 dni)</h4><h4 class="en">Structure (30 days)</h4>
+      <p class="pl"><strong>Tydzień 1-2:</strong> Kultura organizacyjna, buddy system.<br><strong>Tydzień 3:</strong> Zadania z coachem. Feedback 360.<br><strong>Tydzień 4:</strong> Samodzielny mini-projekt.</p>
+      <p class="en"><strong>Week 1-2:</strong> Culture, buddy system.<br><strong>Week 3:</strong> Coaching tasks, 360 feedback.<br><strong>Week 4:</strong> Solo mini-project.</p>
+    </div>
+  </div>
+</div>
+<div class="modal-ov" id="m3">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m3')">✕</button>
+    <div class="modal-cat">Employee Engagement</div>
+    <div class="modal-title">Pulse Survey Analysis</div>
+    <div class="modal-body">
+      <p class="pl">Projekt ankiety satysfakcji oparty na modelu Kahn (1990) i Utrecht Work Engagement Scale.</p>
+      <p class="en">Satisfaction survey project based on the Kahn model (1990) and Utrecht Work Engagement Scale.</p>
+      <h4 class="pl">Output</h4><h4 class="en">Output</h4>
+      <p class="pl">Raport PDF: 3 kluczowe wnioski, heatmapa wyników, konkretny plan naprawczy dla managera.</p>
+      <p class="en">PDF Report: 3 key insights, results heatmap, and a concrete action plan for management.</p>
+    </div>
+  </div>
+</div>
+<div class="modal-ov" id="m4">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m4')">✕</button>
+    <div class="modal-cat">Project Management</div>
+    <div class="modal-title">Prawie Kino 2026 — Case Study STAR</div>
+    <div class="modal-body">
+      <div class="star-row">
+        <div class="star-item"><div class="star-label">S — Situation</div><p class="pl">Brak koordynatora wydarzenia kulturalnego w NZS.</p><p class="en">No coordinator for a cultural event at NZS.</p></div>
+        <div class="star-item"><div class="star-label">T — Task</div><p class="pl">Samodzielna koordynacja projektu Prawie Kino 2026. Zarządzanie zespołem i budżetem.</p><p class="en">Solo coordination of Prawie Kino 2026 project. Team and budget management.</p></div>
+        <div class="star-item"><div class="star-label">A — Action</div><p class="pl">Opracowanie harmonogramu, wdrożenie kanałów komunikacji, delegowanie zadań.</p><p class="en">Schedule creation, communication channels implementation, delegating tasks.</p></div>
+        <div class="star-item"><div class="star-label">R — Result</div><p class="pl">Wydarzenie zrealizowane 100% w budżecie. Stworzona dokumentacja procesowa.</p><p class="en">Event completed 100% on budget. Process documentation created.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-ov" id="m5">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m5')">✕</button>
+    <div class="modal-cat">AI in HR</div>
+    <div class="modal-title">AI w L&D i People Analytics</div>
+    <div class="modal-body"><p class="pl">Analityczny research brief. L&D: LLMs jako narzędzia personalizacji. People Analytics: Predictive attrition. Etyka: Bias, RODO.</p><p class="en">Research brief. L&D: LLMs for personalization. People Analytics: Predictive attrition. Ethics: Bias, GDPR.</p></div>
+  </div>
+</div>
+<div class="modal-ov" id="m6">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m6')">✕</button>
+    <div class="modal-cat">Learning & Development</div>
+    <div class="modal-title">E-learning Module — Feedback SBI</div>
+    <div class="modal-body"><p class="pl">15-minutowy moduł e-learningowy (Articulate Storyline) o technice udzielania feedbacku SBI dla managerów. Podejście case-based learning.</p><p class="en">15-minute e-learning module (Articulate Storyline) on SBI feedback technique for managers. Case-based learning approach.</p></div>
+  </div>
+</div>
+
+<div class="survey-widget" id="survey-box">
+  <div class="sw-title"><span class="pl">Czy podoba Ci się moja autoprezentacja?</span><span class="en">Do you like my presentation?</span></div>
+  <div class="sw-emojis" id="sw-btns">
+    <button onclick="submitSurvey('😞')">😞</button>
+    <button onclick="submitSurvey('😐')">😐</button>
+    <button onclick="submitSurvey('🙂')">🙂</button>
+    <button onclick="submitSurvey('😍')">😍</button>
+  </div>
+  <div class="sw-thanks" id="sw-thanks"><span class="pl">Dziękuję za Twoją opinię! ✦</span><span class="en">Thanks for your feedback! ✦</span></div>
+</div>
+
+<div id="goose-tracker">
+    <div id="bubble">HONK! 🦢</div>
+    <div id="goose-body"></div>
+</div>
+
+<script>
+/* ── AKORDEON FAQ ── */
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    q.parentElement.classList.toggle('open');
+  });
+});
+
+/* ── FILTROWANIE DOŚWIADCZENIA ── */
+document.querySelectorAll('.exp-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.exp-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    document.querySelectorAll('.tl').forEach(tl => {
+      if(f === 'all' || tl.dataset.type === f) {
+        tl.style.display = 'block';
+      } else {
+        tl.style.display = 'none';
+      }
+    });
+  });
+});
+
+/* ── PROGRESS BAR ── */
+window.addEventListener('scroll', () => {
+  const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
+  const scrollProgress = (window.scrollY / scrollTotal) * 100;
+  document.getElementById('progress-bar').style.width = scrollProgress + '%';
+});
+
+/* ── DARK MODE ── */
+const darkBtn = document.getElementById('darkBtn');
+let dark = false;
+function toggleDark(){
+  dark = !dark;
+  document.documentElement.toggleAttribute('data-dark', dark);
+  darkBtn.textContent = dark ? '☀' : '☽';
+  updateChart(); 
+}
+
+/* ── LANG (Bezwzględne wymuszanie CSS - naprawione w 100%) ── */
+let lang = 'pl';
+function toggleLang(){
+  lang = lang === 'pl' ? 'en' : 'pl';
+  document.documentElement.setAttribute('data-lang', lang);
+  updateChart(); 
+}
+
+/* ── PROJECT FILTER ── */
+document.querySelectorAll('.pf-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pf-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    document.querySelectorAll('.pc').forEach(pc => {
+      if(f === 'all' || pc.dataset.cat === f) pc.classList.remove('hidden');
+      else pc.classList.add('hidden');
+    });
+  });
+});
+
+/* ── MODALS ── */
+function openModal(id){
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── WYKRES RADAROWY (Z merytorycznymi opisami na tooltipach) ── */
+let radarChart;
+function buildChart(){
+  const ctx = document.getElementById('radarChart').getContext('2d');
+  const bx = dark ? '#FFFFFF' : '#7B2C3C'; 
+  const bxp = dark ? 'rgba(156, 62, 80, 0.15)' : 'rgba(123,44,60,0.15)';
+  const tc = dark ? 'rgba(255,255,255,0.7)' : '#7A6A5E';
+  const gridColor = dark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)';
+
+  const labelsPL = ['Analityka HR', 'Projektowanie L&D', 'Wiedza HR', 'Zarządzanie Proj.', 'AI i Narzędzia', 'Komunikacja', 'Analiza Danych'];
+  const labelsEN = ['People Analytics', 'L&D Design', 'HR Knowledge', 'Project Mgmt', 'AI & Tools', 'Communication', 'Data Analysis'];
+
+  const tooltipsPL = [
+    "Budowa Attrition Dashboard, staż HR", "Projekt: 30-day onboarding, SBI", 
+    "Studia IB, procesy HR, staż", "Koordynacja Prawie Kino (STAR), NZS", 
+    "Research AI w HR, ChatGPT", "Działalność PR/HR w organizacjach", "Excel, Kaggle Dataset, Power BI"
+  ];
+  const tooltipsEN = [
+    "Attrition Dashboard project, HR intern", "Project: 30-day onboarding, SBI", 
+    "IB studies, HR processes, internship", "Prawie Kino (STAR) coordination, NZS", 
+    "AI in HR Research, ChatGPT", "PR/HR activity in organizations", "Excel, Kaggle Dataset, Power BI"
+  ];
+
+  if(radarChart) radarChart.destroy();
+  radarChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: lang === 'pl' ? labelsPL : labelsEN,
+      datasets: [{
+        label: lang === 'pl' ? 'Profil Kompetencji' : 'Competency Profile',
+        data: [75, 78, 85, 70, 65, 90, 60],
+        borderColor: bx, backgroundColor: bxp, borderWidth: 2,
+        pointBackgroundColor: bx, pointBorderColor: dark ? '#18120F' : '#F2EAE0',
+        pointRadius: 6, pointHoverRadius: 9,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: { 
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: dark ? '#F2EAE0' : '#18120F',
+          titleColor: dark ? '#9C3E50' : '#7B2C3C', 
+          bodyColor: dark ? '#1A1410' : '#FDFAF5', 
+          borderColor: bx, borderWidth: 1, padding: 12,
+          callbacks: {
+            label: function(context) {
+              const tipArr = lang === 'pl' ? tooltipsPL : tooltipsEN;
+              return ` ${context.raw}% — ${tipArr[context.dataIndex]}`;
+            }
+          }
+        }
+      },
+      scales: {
+        r: {
+          min: 0, max: 100, ticks: { display: false, stepSize: 20 },
+          grid: { color: gridColor }, angleLines: { color: gridColor },
+          pointLabels: { color: tc, font: { size: 12, family: 'DM Sans', weight: '500' } }
+        }
+      }
+    }
+  });
+}
+function updateChart(){ if(document.getElementById('radarChart')) buildChart(); }
+
+/* ── SCROLL REVEAL ── */
+const obs = new IntersectionObserver(els => {
+  els.forEach(el => { if(el.isIntersecting) el.target.classList.add('in'); });
+}, {threshold: 0.1});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+/* ── LICZNIK ODWIEDZIN ── */
+function initCounter() {
+  let visits = localStorage.getItem('bg_visits') || 0;
+  visits++; localStorage.setItem('bg_visits', visits);
+  document.getElementById('visit-count').innerText = visits;
+}
+
+/* ── ANKIETA SATYSFAKCJI ── */
+function submitSurvey(emoji) {
+  document.getElementById('sw-btns').style.display = 'none';
+  document.querySelector('.sw-title').style.display = 'none';
+  document.getElementById('sw-thanks').style.display = 'block';
+  setTimeout(() => { document.getElementById('survey-box').style.transform = 'translateY(150%)'; }, 3000);
+}
+
+/* ── GĄSKA (Z DŹWIĘKIEM) ── */
+const tracker = document.getElementById('goose-tracker');
+const bodyGoose = document.getElementById('goose-body');
+let targetY = 50, currentY = 50, isScrolling;
+
+// INSRUKCJA: Wgraj plik 'honk.mp3' do tego samego folderu, co strona
+const honkAudio = new Audio('honk.mp3'); 
+
+function smoothFollow() {
+    currentY += (targetY - currentY) * 0.35; 
+    tracker.style.top = currentY + 'px';
+    requestAnimationFrame(smoothFollow);
+}
+smoothFollow();
+
+window.addEventListener('scroll', () => {
+    targetY = window.scrollY + 50;
+    if (!bodyGoose.classList.contains('walking')) bodyGoose.classList.add('walking');
+    window.clearTimeout(isScrolling);
+    isScrolling = setTimeout(() => { bodyGoose.classList.remove('walking'); }, 100);
+});
+
+tracker.addEventListener('click', () => {
+    bodyGoose.classList.remove('walking'); bodyGoose.classList.add('jumping');
+    tracker.classList.add('honking');
+    
+    // Odtwarzanie dźwięku honk! (Działa tylko, gdy plik istnieje w folderze)
+    honkAudio.currentTime = 0;
+    honkAudio.play().catch(err => console.log('Odtworzenie dźwięku wymaga interakcji lub plik mp3 nie istnieje.'));
+
+    setTimeout(() => { bodyGoose.classList.remove('jumping'); tracker.classList.remove('honking'); }, 500);
+});
+
+/* ── INIT W ZDARZENIU LOAD ── */
+window.addEventListener('load', () => {
+  buildChart(); initCounter();
+});
+</script>
+</body>
+</html>
