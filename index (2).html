@@ -8,7 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 /* =========================================================
-   BAZA I KOLORY (Z perfekcyjnym Dark Mode)
+   BAZA I KOLORY
    ========================================================= */
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -26,17 +26,18 @@
   --fb: 'DM Sans', sans-serif;
 }
 
+/* Zaktualizowany, cieplejszy Dark Mode (Beige/Cocoa tint) */
 [data-dark]{
-  --bg: #18120F;    
-  --bg2: #1A1410;   
-  --bg3: #18120F;
+  --bg: #2A2421;    
+  --bg2: #322A27;   
+  --bg3: #2A2421;
   --dark: #F2EAE0;  
-  --bx: #9C3E50;    
-  --bxh: #7B2C3C;
-  --bxp: rgba(156, 62, 80, 0.15); 
-  --t: #FDFAF5;     
-  --tm: #C5BAB0;    
-  --br: #7A6A5E;    
+  --bx: #A8485B;    
+  --bxh: #8C3A4A;
+  --bxp: rgba(168, 72, 91, 0.15); 
+  --t: #FDF8F5;     
+  --tm: #D1C5BD;    
+  --br: #4A3E39;    
 }
 
 html{scroll-behavior:smooth;}
@@ -61,7 +62,7 @@ nav{
   display:flex; justify-content:space-between; align-items:center;
   transition:background .3s,border-color .3s;
 }
-[data-dark] nav{background:rgba(24,18,15,.95);}
+[data-dark] nav{background:rgba(42,36,33,.95);}
 .nav-l{display:flex;align-items:center;gap:32px;}
 .nav-logo{font-family:var(--ff);font-weight:800;font-size:14px;letter-spacing:.08em;color:var(--bx);}
 .nav-links{display:flex;gap:26px;}
@@ -159,11 +160,13 @@ nav{
    ========================================================= */
 section{padding:88px 52px; position:relative; z-index:2;}
 .sec-inner{max-width:960px;margin:0 auto;}
+
 #about{background:var(--bg2);border-bottom:1px solid var(--br);}
 #interests{background:var(--bg);border-bottom:1px solid var(--br);}
 #experience{background:var(--bg2);border-bottom:1px solid var(--br);}
-#projects{background:var(--bg);border-bottom:1px solid var(--br);}
-#skills{background:var(--bg2);border-bottom:1px solid var(--br);}
+#education{background:var(--bg);border-bottom:1px solid var(--br);}
+#projects{background:var(--bg2);border-bottom:1px solid var(--br);}
+#skills{background:var(--bg);border-bottom:1px solid var(--br);}
 #contact{background:var(--dark);border-bottom:1px solid var(--br);}
 
 .sec-head{margin-bottom:52px;display:flex;align-items:baseline;gap:20px;flex-wrap:wrap;}
@@ -197,7 +200,7 @@ section{padding:88px 52px; position:relative; z-index:2;}
 .faq-item { margin-bottom: 10px; border: 1px solid var(--br); border-radius: 6px; background: var(--bg3); overflow: hidden; }
 .faq-q { padding: 16px 20px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: var(--t); font-size:14px; }
 .faq-a { padding: 0 20px; max-height: 0; opacity: 0; transition: all 0.3s ease; color: var(--tm); font-size: 14.5px; line-height:1.6; }
-.faq-item.open .faq-a { padding: 0 20px 20px; max-height: 200px; opacity: 1; }
+.faq-item.open .faq-a { padding: 0 20px 20px; max-height: 1000px; opacity: 1; }
 .faq-q::after { content: '+'; color: var(--bx); font-size: 20px; transition: transform 0.3s; font-family: monospace; }
 .faq-item.open .faq-q::after { transform: rotate(45deg); }
 
@@ -295,12 +298,13 @@ section{padding:88px 52px; position:relative; z-index:2;}
 .sl li:hover {color: var(--bx);}
 .sl li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--bx);flex-shrink:0;}
 
-.cert-box{
-  grid-column:1/-1;margin-top:8px; background:var(--bg);border:1px solid var(--br);
+a.cert-box{
+  grid-column:1/-1;margin-top:8px; background:var(--bg2);border:1px solid var(--br);
   border-radius:4px;padding:18px 22px; display:flex;align-items:center;gap:16px;max-width:420px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  text-decoration: none; color: inherit;
 }
-.cert-box:hover{transform:translateY(-2px); box-shadow: 0 4px 12px var(--bxp);}
+a.cert-box:hover{transform:translateY(-2px); box-shadow: 0 4px 12px var(--bxp); border-color: var(--bx);}
 .cert-ico{
   width:44px;height:44px;border-radius:50%;background:var(--bx);color:var(--bg3);
   font-family:var(--ff);font-weight:800;font-size:12px; display:flex;align-items:center;justify-content:center;flex-shrink:0;
@@ -339,7 +343,7 @@ footer strong{color:var(--bg3);font-family:var(--ff);font-weight:700;}
 /* MODAL */
 .modal-ov{
   display:none;position:fixed;inset:0;z-index:200;
-  background:rgba(24,18,15,.7);backdrop-filter:blur(8px);
+  background:rgba(42,36,33,.8);backdrop-filter:blur(8px);
   align-items:center;justify-content:center;padding:20px;
 }
 .modal-ov.open{display:flex;}
@@ -479,15 +483,15 @@ html[data-lang="en"] .pl { display: none !important; }
       <a href="#about"><span class="pl">O mnie</span><span class="en">About</span></a>
       <a href="#interests"><span class="pl">Zainteresowania</span><span class="en">Interests</span></a>
       <a href="#experience"><span class="pl">Doświadczenie</span><span class="en">Experience</span></a>
+      <a href="#education"><span class="pl">Edukacja</span><span class="en">Education</span></a>
       <a href="#projects"><span class="pl">Projekty</span><span class="en">Projects</span></a>
       <a href="#skills"><span class="pl">Umiejętności</span><span class="en">Skills</span></a>
       <a href="#contact"><span class="pl">Kontakt</span><span class="en">Contact</span></a>
     </div>
   </div>
   <div class="nav-r">
-    <a href="cv-barbara-gwozdz.pdf" download class="nav-btn btn-dl">
-      <span class="pl">Pobierz CV</span><span class="en">Download CV</span>
-    </a>
+    <a href="CV_Barbara_Gwóźdź.pdf" download class="nav-btn btn-dl pl">Pobierz CV</a>
+    <a href="CV_Barbara_Gwozdz.pdf" download class="nav-btn btn-dl en">Download CV</a>
     <button class="nav-btn btn-lang" onclick="toggleLang()">EN / PL</button>
     <button class="btn-dark" onclick="toggleDark()" id="darkBtn" title="Dark mode">☽</button>
   </div>
@@ -515,8 +519,10 @@ html[data-lang="en"] .pl { display: none !important; }
         Connecting <span class="h-kw">data<span class="kw-tip">📈</span></span> with empathy.
       </p>
       <div class="h-actions">
-        <a href="cv-barbara-gwozdz.pdf" download class="h-cta">
-          ⬇ <span class="pl">Pobierz CV</span><span class="en">Download CV</span>
+        <a href="CV_Barbara_Gwóźdź.pdf" download class="h-cta pl">⬇ Pobierz CV</a>
+        <a href="CV_Barbara_Gwozdz.pdf" download class="h-cta en">⬇ Download CV</a>
+        <a href="Reference letter_Barbara_Gwozdz.pdf" download class="h-cta-ghost">
+          <span class="pl">List referencyjny</span><span class="en">Reference Letter</span>
         </a>
         <a href="#contact" class="h-cta-ghost">
           <span class="pl">Napisz do mnie</span><span class="en">Get in touch</span>
@@ -533,7 +539,7 @@ html[data-lang="en"] .pl { display: none !important; }
   </div>
   <div class="hero-r">
     <div class="photo-wrap">
-      <img id="profilePhoto" src="" alt="Barbara Gwóźdź" style="display:none;" onload="this.style.display='block'; this.nextElementSibling.style.display='none';">
+      <img id="profilePhoto" src="profilowe.jpg" onerror="this.onerror=null; this.src='profilowe.png';" alt="Barbara Gwóźdź" style="display:none;" onload="this.style.display='block'; this.nextElementSibling.style.display='none';">
       <div class="photo-placeholder-text"><span class="pl">Miejsce<br>na zdjęcie</span><span class="en">Place for<br>photo</span></div>
     </div>
   </div>
@@ -548,12 +554,16 @@ html[data-lang="en"] .pl { display: none !important; }
     <div class="about-g reveal">
       <div>
         <div class="about-txt">
-          <p class="pl">Jestem studentką III roku International Business na Uniwersytecie Ekonomicznym we Wrocławiu z praktycznym doświadczeniem w obszarze Talent Development oraz HR i PR.</p>
-          <p class="pl">Wierzę, że najlepsze decyzje o ludziach podejmuje się łącząc liczby z empatią. Dlatego rozwijam się równolegle w People Analytics i Learning & Development, eksplorując też zastosowania AI w HR.</p>
-          <p class="pl">Aktywnie działam w Niezależnym Zrzeszeniu Studentów na poziomie lokalnym i krajowym, gdzie koordynuję projekty i buduję doświadczenie w zarządzaniu zespołami.</p>
-          <p class="en">I am a 3rd-year International Business student at the University of Economics in Wrocław, with hands-on experience in Talent Development, HR and PR.</p>
-          <p class="en">I believe the best people decisions are made by combining numbers with empathy. That's why I develop in People Analytics and Learning & Development simultaneously, also exploring AI applications in HR.</p>
-          <p class="en">I am actively involved in the Independent Students' Association (NZS) at the local and national levels, coordinating projects and building experience in team management.</p>
+          <div class="pl">
+            <p>Jestem studentką III roku International Business na Uniwersytecie Ekonomicznym we Wrocławiu z praktycznym doświadczeniem w obszarze Talent Development oraz HR i PR.</p>
+            <p style="margin-top:14px;">Wierzę, że najlepsze decyzje o ludziach podejmuje się łącząc liczby z empatią. Dlatego rozwijam się równolegle w People Analytics i Learning & Development, eksplorując też zastosowania AI w HR.</p>
+            <p style="margin-top:14px;">Aktywnie działam w Niezależnym Zrzeszeniu Studentów na poziomie lokalnym i krajowym, gdzie koordynuję projekty i buduję doświadczenie w zarządzaniu zespołami.</p>
+          </div>
+          <div class="en">
+            <p>I am a 3rd-year International Business student at the University of Economics in Wrocław, with hands-on experience in Talent Development, HR and PR.</p>
+            <p style="margin-top:14px;">I believe the best people decisions are made by combining numbers with empathy. That's why I develop in People Analytics and Learning & Development simultaneously, also exploring AI applications in HR.</p>
+            <p style="margin-top:14px;">I am actively involved in the Independent Students' Association (NZS) at the local and national levels, coordinating projects and building experience in team management.</p>
+          </div>
         </div>
         
         <div class="faq-wrap">
@@ -753,10 +763,63 @@ html[data-lang="en"] .pl { display: none !important; }
   </div>
 </section>
 
-<section id="projects">
+<section id="education">
   <div class="sec-inner">
     <div class="sec-head reveal">
       <span class="sec-n">03</span>
+      <h2 class="sec-t"><span class="pl">Edukacja</span><span class="en">Education</span></h2>
+    </div>
+    
+    <div class="tls reveal">
+      <div class="tl">
+        <div class="tl-d"><span class="pl">10.2023 - 06.2026</span><span class="en">10.2023 - 06.2026</span></div>
+        <div class="tl-r"><span class="pl">Licencjat: International Business (w j. angielskim)</span><span class="en">Bachelor's in International Business (in English)</span></div>
+        <div class="tl-o"><span class="pl">Uniwersytet Ekonomiczny we Wrocławiu</span><span class="en">Wroclaw University of Economics and Business</span></div>
+        <div class="tl-p">
+          <div class="pl">Dzięki rzeczywistym studiom przypadków, interaktywnym projektom i dyskusjom z ekspertami ds. biznesu międzynarodowego, zgłębiam dynamikę globalnych rynków. Program zapewnia wgląd w kluczowe czynniki ekonomiczne, zarządcze, kulturowe, polityczne i społeczne kształtujące dzisiejszy biznes międzynarodowy.</div>
+          <div class="en">Through real-world case studies, interactive projects, and discussions with international business experts, you will explore the dynamics of global markets. You will gain insights into key economic, managerial, cultural, political, and social factors shaping international business today.</div>
+        </div>
+        
+        <div class="faq-wrap" style="margin-top: 18px;">
+          <div class="faq-item">
+            <div class="faq-q"><span class="pl">Więcej o programie studiów (Akredytacja EFMD)</span><span class="en">More about the program (EFMD Accredited)</span></div>
+            <div class="faq-a">
+              <div class="pl">
+                <p style="margin-bottom:12px;">Ten program wykracza poza teorię. Rozwijam umiejętności krytycznego i kreatywnego rozwiązywania problemów poprzez praktyczne projekty i symulacje biznesowe. Absolwenci są doskonale przygotowani do karier w handlu międzynarodowym, konsultingu, logistyce, finansach i korporacjach międzynarodowych. Program dostarcza również fundamentów do rozpoczęcia studiów magisterskich na całym świecie.</p>
+                <h4 style="color:var(--bx); font-family:var(--ff); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 16px 0 10px;">Kluczowe umiejętności i atrybuty (Akredytacja EFMD)</h4>
+                <ul class="sl" style="font-size: 13.5px;">
+                  <li>Wykorzystanie wiedzy międzykulturowej i umiejętności komunikacyjnych do działania w zróżnicowanych organizacjach;</li>
+                  <li>Zrozumienie sił ekonomicznych, politycznych, społecznych i kulturowych wpływających na globalną gospodarkę;</li>
+                  <li>Rozwój świadomości biznesowej i elastyczne reagowanie na rynkowe zmiany i wyzwania;</li>
+                  <li>Potencjał do bycia przedsiębiorczym i przejmowania ról przywódczych w środowisku międzynarodowym;</li>
+                  <li>Skuteczna i płynna komunikacja w biznesowym języku angielskim.</li>
+                </ul>
+              </div>
+              <div class="en">
+                <p style="margin-bottom:12px;">This programme goes beyond theory. You will develop critical and creative problem-solving skills through hands-on projects, business simulations, and case studies. Taught by experienced Polish and international lecturers, as well as industry professionals, the courses provide a truly global perspective and networking opportunities that will prepare you for a dynamic career in international business.</p>
+                <p style="margin-bottom:12px;">Graduates of this programme are well-prepared for diverse careers in international trade, finance, consulting, logistics, and multinational corporations. You will also gain the entrepreneurial mindset and skills needed to start your own international business or expand a family enterprise into global markets. For those looking to further their education, this degree provides a strong foundation for pursuing a Master’s degree at top institutions worldwide.</p>
+                <h4 style="color:var(--bx); font-family:var(--ff); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 16px 0 10px;">EFMD Accredited label - Key attributes</h4>
+                <ul class="sl" style="font-size: 13.5px;">
+                  <li>Take advantage of cross-cultural knowledge, communication and language skills to operate effectively within diversified domestic and multinational organisations;</li>
+                  <li>Understand the economic, political, legal, social, and cultural forces that affect businesses operating in a globalised economy;</li>
+                  <li>Develop the awareness of business realities and the confidence to react flexibly to changes and challenges faced in the global business environment;</li>
+                  <li>Have the potential to be entrepreneurial and take leadership roles in their chosen occupations, careers and communities;</li>
+                  <li>Communicate in business English effectively and confidently.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="sec-inner">
+    <div class="sec-head reveal">
+      <span class="sec-n">04</span>
       <h2 class="sec-t"><span class="pl">Projekty Portfolio</span><span class="en">Portfolio Projects</span></h2>
     </div>
     <div class="pf-tabs reveal">
@@ -840,7 +903,7 @@ html[data-lang="en"] .pl { display: none !important; }
 <section id="skills">
   <div class="sec-inner">
     <div class="sec-head reveal">
-      <span class="sec-n">04</span>
+      <span class="sec-n">05</span>
       <h2 class="sec-t"><span class="pl">Umiejętności & Narzędzia</span><span class="en">Skills & Tools</span></h2>
     </div>
     <div class="skills-g reveal">
@@ -883,13 +946,19 @@ html[data-lang="en"] .pl { display: none !important; }
               <li><span class="pl">Prezentacje biznesowe</span><span class="en">Business presentations</span></li>
             </ul>
           </div>
-          <div class="cert-box">
+          
+          <a href="AI Jutra - certyfikat.pdf" target="_blank" rel="noopener" class="cert-box" title="Kliknij, aby zobaczyć certyfikat w formacie PDF">
             <div class="cert-ico">AI</div>
             <div>
-              <div class="cert-nm">AI in Business Development</div>
-              <div class="cert-sb">Google Umiejętności Jutra 2025</div>
+              <div class="cert-nm">Using AI in Business Development</div>
+              <div class="cert-sb">Google Umiejętności Jutra & SGH</div>
+              <div style="font-size: 10px; color: var(--tm); margin-top: 5px; line-height: 1.45;">
+                <span class="pl">Wydano:</span><span class="en">Issued:</span> 2025-10-26<br>
+                <span style="font-family: monospace; font-size: 9px; word-break: break-all;">ID: b004fffd-a5e0-4bc5-a998-587bd69d20bd</span>
+              </div>
             </div>
-          </div>
+          </a>
+
         </div>
       </div>
     </div>
@@ -899,7 +968,7 @@ html[data-lang="en"] .pl { display: none !important; }
 <section id="contact">
   <div class="sec-inner">
     <div class="sec-head reveal">
-      <span class="sec-n">05</span>
+      <span class="sec-n">06</span>
       <h2 class="sec-t"><span class="pl">Kontakt</span><span class="en">Contact</span></h2>
     </div>
     <div class="c-g reveal">
@@ -1105,10 +1174,10 @@ function closeModal(id){
 let radarChart;
 function buildChart(){
   const ctx = document.getElementById('radarChart').getContext('2d');
-  const bx = dark ? '#FFFFFF' : '#7B2C3C'; 
-  const bxp = dark ? 'rgba(156, 62, 80, 0.15)' : 'rgba(123,44,60,0.15)';
+  const bx = dark ? '#A8485B' : '#7B2C3C'; 
+  const bxp = dark ? 'rgba(168, 72, 91, 0.15)' : 'rgba(123,44,60,0.15)';
   const tc = dark ? 'rgba(255,255,255,0.7)' : '#7A6A5E';
-  const gridColor = dark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)';
+  const gridColor = dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.08)';
 
   const labelsPL = ['Analityka HR', 'Projektowanie L&D', 'Wiedza HR', 'Zarządzanie Proj.', 'AI i Narzędzia', 'Komunikacja', 'Analiza Danych'];
   const labelsEN = ['People Analytics', 'L&D Design', 'HR Knowledge', 'Project Mgmt', 'AI & Tools', 'Communication', 'Data Analysis'];
@@ -1116,12 +1185,12 @@ function buildChart(){
   const tooltipsPL = [
     "Budowa Attrition Dashboard, staż HR", "Projekt: 30-day onboarding, SBI", 
     "Studia IB, procesy HR, staż", "Koordynacja Prawie Kino (STAR), NZS", 
-    "Research AI w HR, ChatGPT", "Działalność PR/HR w organizacjach", "Excel, Kaggle Dataset, Power BI"
+    "Research AI w HR, ChatGPT, Cert SGH", "Działalność PR/HR w organizacjach", "Excel, Kaggle Dataset, Power BI"
   ];
   const tooltipsEN = [
     "Attrition Dashboard project, HR intern", "Project: 30-day onboarding, SBI", 
     "IB studies, HR processes, internship", "Prawie Kino (STAR) coordination, NZS", 
-    "AI in HR Research, ChatGPT", "PR/HR activity in organizations", "Excel, Kaggle Dataset, Power BI"
+    "AI in HR Research, ChatGPT, SGH Cert", "PR/HR activity in organizations", "Excel, Kaggle Dataset, Power BI"
   ];
 
   if(radarChart) radarChart.destroy();
@@ -1131,9 +1200,9 @@ function buildChart(){
       labels: lang === 'pl' ? labelsPL : labelsEN,
       datasets: [{
         label: lang === 'pl' ? 'Profil Kompetencji' : 'Competency Profile',
-        data: [75, 78, 85, 70, 65, 90, 60],
+        data: [75, 78, 85, 70, 75, 90, 60],
         borderColor: bx, backgroundColor: bxp, borderWidth: 2,
-        pointBackgroundColor: bx, pointBorderColor: dark ? '#18120F' : '#F2EAE0',
+        pointBackgroundColor: bx, pointBorderColor: dark ? '#2A2421' : '#F2EAE0',
         pointRadius: 6, pointHoverRadius: 9,
       }]
     },
@@ -1142,9 +1211,9 @@ function buildChart(){
       plugins: { 
         legend: { display: false },
         tooltip: {
-          backgroundColor: dark ? '#F2EAE0' : '#18120F',
-          titleColor: dark ? '#9C3E50' : '#7B2C3C', 
-          bodyColor: dark ? '#1A1410' : '#FDFAF5', 
+          backgroundColor: dark ? '#FDF8F5' : '#18120F',
+          titleColor: dark ? '#8C3A4A' : '#7B2C3C', 
+          bodyColor: dark ? '#2A2421' : '#FDFAF5', 
           borderColor: bx, borderWidth: 1, padding: 12,
           callbacks: {
             label: function(context) {
@@ -1192,8 +1261,7 @@ const tracker = document.getElementById('goose-tracker');
 const bodyGoose = document.getElementById('goose-body');
 let targetY = 50, currentY = 50, isScrolling;
 
-// INSRUKCJA: Wgraj plik 'honk.mp3' do tego samego folderu, co strona
-const honkAudio = new Audio('honk.mp3'); 
+const honkAudio = new Audio('kwak.mp3'); 
 
 function smoothFollow() {
     currentY += (targetY - currentY) * 0.35; 
@@ -1213,7 +1281,6 @@ tracker.addEventListener('click', () => {
     bodyGoose.classList.remove('walking'); bodyGoose.classList.add('jumping');
     tracker.classList.add('honking');
     
-    // Odtwarzanie dźwięku honk! (Działa tylko, gdy plik istnieje w folderze)
     honkAudio.currentTime = 0;
     honkAudio.play().catch(err => console.log('Odtworzenie dźwięku wymaga interakcji lub plik mp3 nie istnieje.'));
 
